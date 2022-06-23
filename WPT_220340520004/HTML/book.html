@@ -1,0 +1,133 @@
+<html>
+    <head>
+
+        <script>
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+
+        </script>
+        <script>
+            $(
+                ()=>{
+                     console.log("testing code");
+                     function updatebook(updatobj){
+                        let updated = false;
+                        for(let i = 0 ; i<book.length ; i++)
+                                {
+                                    if(book[i].bookid == updateobj.bookid){
+                                        book[i].bookprice=updateobj.bookprice;
+                                        book[i].bookname=updateobj.bookname;
+                                        break;
+
+                                    }
+                                    return updated;
+                     }
+
+
+                function showcontents(){
+                    let ap ={
+                            url:"http://localhost:10000/getbookdetil",
+                            type: "get",
+                            dataType: "json",
+                            success:(db)=>{ book = db;
+                                let bookscore = "";
+                                for(let i = 0 ; i<book.length ; i++)
+                                {
+                                    bookscore += "<br/>" +book[i].bookid+ " " +book[i].bookname+ " " +book[i].bookprice;
+                                }
+
+
+
+                    },
+                    error:(error)=>{console.log("failure"+error)} 
+                        };
+                        $.ajax(ap);
+
+                }
+                
+
+                    $("#bookid").blur(()=>{
+                        console.log("checling blur event");
+
+                        let a =$("#bookid").val();
+                         let input = {bookid:$("#bookid").val(), 
+                        bookname:$("#bookname").val(),
+                        bookprice:$("#bookprice").val()};
+
+
+                        let ap = {
+                            data:input,
+                            url:"http://localhost:10000/getbookdetil",
+                            type: "get",
+                            dataType: "json",
+                            success:(output)=>{
+                                if(output.statis === true){
+                                    console.log("successfully conected")
+                                    $("#message").text("“Bookid is found");
+                                    $("#bookname").val(output.book.bookname);
+                                    $("#bookprice").val(output.book.bookprice);
+                                   
+                                }
+                                else{
+                                    $("#message").text("bookid not found");
+                                    $("#bookname").val("")
+                                    $("#bookprice").val("")
+                                }
+
+                            } ,
+                            error:(error)=>{console.log("failure"+error)} 
+                        };
+                        $.ajax(ap);
+
+
+
+
+                    });
+
+                    $("#updatebook").click(()=>{
+
+                        let input = {bookid:$("#bookid").val(), 
+                        bookname:$("#bookname").val(),
+                        bookprice:$("#bookprice").val()};
+                        let ap = {
+                            data:input,
+                            url:"http://localhost:10000/getbookdetil",
+                            type: "get",
+                            dataType: "json",
+                            success:(output)=>{
+                                if(output.statis === true){
+                                    
+                                    $("#message").text("“updated successfully");
+                                    
+                                   
+                                }
+                                else{
+                                    $("#message").text("could not update");
+                                    $("#bookname").val("")
+                                    $("#bookprice").val("")
+                                    
+                                }
+                            },
+                            error:(error)=>{console.log("failure"+error)} 
+                        };
+                        $.ajax(ap);
+                    
+                    });
+                    showcontents();
+                    
+            
+        </script>
+        <style>
+
+        </style>
+    </head>
+    <body>
+        Book id      <input type="text" id="bookid" placeholder="Enter book id"><span id="meassage">  What happened Book added or not</span>
+        <br>
+        <br>
+        Book name <input type="text" id="bookname" placeholder="Enter book id">
+        <br>
+        <br>price <input type="text" id="bookprice" placeholder="Enter book id">
+        <br>
+        <br><button id="updatebook">Update Book</button>
+    </body>
+</html>
